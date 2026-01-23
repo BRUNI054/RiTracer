@@ -33,3 +33,10 @@ foreach(uexec ${UTESTS})
   add_test(NAME ${uexec} COMMAND ${uexec})
 endforeach(uexec)
 
+add_executable(utest_vec3
+  utest_vec3.cpp 
+)
+target_link_libraries(utest_vec3 PRIVATE Catch2::Catch2WithMain)
+target_link_libraries(utest_vec3 PRIVATE cs4212-util)
+
+
