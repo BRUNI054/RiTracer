@@ -1,7 +1,11 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
+#include <cstdlib>
 
+#include "png++/png.hpp"
+#include "handleGraphicsArgs.h"
 
 #include "vec3.hpp"
 

@@ -39,4 +39,10 @@ add_executable(utest_vec3
 target_link_libraries(utest_vec3 PRIVATE Catch2::Catch2WithMain)
 target_link_libraries(utest_vec3 PRIVATE cs4212-util)
 
+add_executable(utest_framebuffer
+  utest_framebuffer.cpp 
+)
+target_link_libraries(utest_vec3 PRIVATE Catch2::Catch2WithMain)
+target_link_libraries(utest_vec3 PRIVATE cs4212-util)
+
 

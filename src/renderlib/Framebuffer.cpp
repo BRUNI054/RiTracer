@@ -40,3 +40,19 @@ void::Framebuffer::clearToHorizontalGradient(color left, color right){
 void::Framebuffer::setPixelColor(int x, int y, color c){
     fbStorage[(y * width) + x] = c;
 }
+
+void::Framebuffer::exportAsPNG(std::string filename) {
+    png::image< png::rgb_pixel > imData( width, height );
+    for (size_t y = 0; y < imData.get_height(); ++y)
+    {
+        for (size_t x = 0; x < imData.get_width(); ++x)
+	    {
+            color c = fbStorage[(y*width)+x];
+            int r = c.r() * 255;
+            int g = c.g() * 255;
+            int b = c.b() * 255;
+            imData[y][x] = png::rgb_pixel(r, g, b);
+	    }
+    }
+    imData.write(filename);
+}
