@@ -13,7 +13,11 @@ class Framebuffer{
 
     void clearToColor(color c);
 
-    void setPixelColor (int i, int j, color);
+    void clearToVerticalGradient(color top, color bottom);
+
+    void clearToHorizontalGradient(color lef, color right);
+
+    void setPixelColor (int x, int y, color);
 
     void exportAsPNG(std::string filename);
 
