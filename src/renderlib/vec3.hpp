@@ -1,5 +1,4 @@
-#ifndef VEC3_H
-#define VEC3_H
+#pragma once
 
 #include <cmath>
 #include <iostream>
@@ -9,12 +8,13 @@ class vec3 {
     
     //members
     float var[3];
+    bool isColor;
 
   public:
 
-    //constructors
+    //constructors class
     vec3() : var{0,0,0} {}
-    vec3(float var0, float var1, float var2) : var{var0, var1, var2} {}
+    vec3(float var0, float var1, float var2, bool color = 0) : var{var0, var1, var2}, isColor(color)  {}
   
     //methods
     float x() const {return var[0];}
@@ -102,8 +102,5 @@ class vec3 {
 
 };
 
-using dmag = vec3;
+using point = vec3;
 using color = vec3;
-
-
-#endif

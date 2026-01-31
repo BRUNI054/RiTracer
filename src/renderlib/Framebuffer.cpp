@@ -1,38 +1,31 @@
 #include "Framebuffer.hpp"
+#include "./../png++/png.hpp"
 
 Framebuffer::Framebuffer() : width(100), height(100), fbStorage(width*height){}
 Framebuffer::Framebuffer(int w, int h) : width(w), height(h), fbStorage(width*height){}
 
 void::Framebuffer::clearToColor(color c) {
-    for (auto i : fbStorage) {
-        i = c;
+    for (int i = 0; i < (width * height); i++) {
+        fbStorage[i] = c;
     }
 }
 
 void::Framebuffer::clearToVerticalGradient(color top, color bottom){
-    for (int y; y++; y > height) {
-        for (int x; x++; x > width) {
-            float t = y / height;
-            color c1 = top;
-            color c2 = bottom;
-            (c1 * t);
-            (c2 / t);
-            c1+=c2;
-            fbStorage[(y*width)+x] = c1;
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            float t = float(y) / float(height);
+            color c = ((1-t)*bottom) + (t*top);
+            fbStorage[(y*width)+x] = c;
         }
     }
 }
 
 void::Framebuffer::clearToHorizontalGradient(color left, color right){
-    for (int y; y++; y > height) {
-        for (int x; x++; x > width) {
-            float t = x / width;
-            color c1 = left;
-            color c2 = right;
-            (c1 * t);
-            (c2 / t);
-            c1+=c2;
-            fbStorage[(y*width)+x] = c1;
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            float t = float(x) / float(width);
+            color c = ((1-t)*right) + (t*left);
+            fbStorage[(y*width)+x] = c;
         }
     }
 }
@@ -48,9 +41,9 @@ void::Framebuffer::exportAsPNG(std::string filename) {
         for (size_t x = 0; x < imData.get_width(); ++x)
 	    {
             color c = fbStorage[(y*width)+x];
-            int r = c.r() * 255;
-            int g = c.g() * 255;
-            int b = c.b() * 255;
+            int r = int(c.r() * 255);
+            int g = int(c.g() * 255);
+            int b = int(c.b() * 255);
             imData[y][x] = png::rgb_pixel(r, g, b);
 	    }
     }

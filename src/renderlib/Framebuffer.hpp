@@ -1,16 +1,10 @@
 #pragma once
 
 #include <vector>
-#include <iostream>
-#include <cstdlib>
-
-#include "png++/png.hpp"
-#include "handleGraphicsArgs.h"
-
 #include "vec3.hpp"
 
 class Framebuffer{
-  public:
+public:
     Framebuffer();
 
     Framebuffer(int w, int h);
@@ -19,13 +13,13 @@ class Framebuffer{
 
     void clearToVerticalGradient(color top, color bottom);
 
-    void clearToHorizontalGradient(color lef, color right);
+    void clearToHorizontalGradient(color left, color right);
 
-    void setPixelColor (int x, int y, color);
+    void setPixelColor(int x, int y, color c);
 
     void exportAsPNG(std::string filename);
 
-  private:
+private:
     int width, height;
     std::vector<color> fbStorage;
 };
