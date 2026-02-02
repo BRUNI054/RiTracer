@@ -21,3 +21,8 @@ add_executable(test_framebuffer
   renderlib/test_framebuffer.cpp
 )
 target_link_libraries(test_framebuffer render-lib)
+
+add_executable(test_perspectiveCamera
+  renderlib/test_perspectiveCamera.cpp
+)
+target_link_libraries(test_perspectiveCamera render-lib)
