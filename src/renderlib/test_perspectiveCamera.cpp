@@ -1,14 +1,16 @@
 #include "Framebuffer.hpp"
 #include "perspectiveCamera.hpp"
+#include <iostream>
 
 
-void testCamera(int width, int height) {
-    Framebuffer fb(width, height);
+void testCamera(int nx, int ny, float width, float height, float foc, vec3 orig, vec3 dir) {
+    Framebuffer fb(nx, ny);
 
-    perspectiveCamera p = perspectiveCamera(width, height);
+    perspectiveCamera p = perspectiveCamera(nx, ny, height, width, foc, orig, dir);
+    // perspectiveCamera p;
 
-    for (int x=0; x<width; x++) {
-        for(int y=0; y<height; y++) {
+    for (int x=0; x<nx; x++) {
+        for(int y=0; y<ny; y++) {
             ray r;
             p.generateRay(x, y, r);
 
@@ -19,10 +21,17 @@ void testCamera(int width, int height) {
             fb.setPixelColor(x, y, rayDirColor);
         }
     }
-    fb.exportAsPNG("defaultCamYRayColors.png");
+    fb.exportAsPNG("AwesomeCameraDebugImage.png");
 }
 
 int main() {
-    testCamera(800, 800);
+    int pix_height = 200;
+    int pix_width = 200;
+    float height = 0.5f;
+    float width = 0.5f;
+    float focalLength = 0.0625f;
+    vec3 orig(14.0f,15.0f,16.0f);
+    vec3 dir(42.0f, 14.3f, 18.6f);
+    testCamera(pix_width, pix_height, width, height, focalLength, orig, dir);
     return 0;
 }

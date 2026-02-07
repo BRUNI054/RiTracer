@@ -36,15 +36,15 @@ void::Framebuffer::setPixelColor(int x, int y, color c){
 
 void::Framebuffer::exportAsPNG(std::string filename) {
     png::image< png::rgb_pixel > imData( width, height );
-    for (size_t y = 0; y < imData.get_height(); ++y)
+    for (size_t y = imData.get_height()-1; y > 0; y--)
     {
-        for (size_t x = 0; x < imData.get_width(); ++x)
+        for (size_t x = 0; x < imData.get_width(); x++)
 	    {
             color c = fbStorage[(y*width)+x];
             int r = int(c.r() * 255);
             int g = int(c.g() * 255);
             int b = int(c.b() * 255);
-            imData[y][x] = png::rgb_pixel(r, g, b);
+            imData[height-y][x] = png::rgb_pixel(r, g, b);
 	    }
     }
     imData.write(filename);
