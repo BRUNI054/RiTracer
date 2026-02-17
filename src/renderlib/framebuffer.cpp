@@ -1,16 +1,16 @@
-#include "Framebuffer.hpp"
+#include "framebuffer.hpp"
 #include "./../png++/png.hpp"
 
-Framebuffer::Framebuffer() : width(100), height(100), fbStorage(width*height){}
-Framebuffer::Framebuffer(int w, int h) : width(w), height(h), fbStorage(width*height){}
+framebuffer::framebuffer() : width(100), height(100), fbStorage(width*height){}
+framebuffer::framebuffer(int w, int h) : width(w), height(h), fbStorage(width*height){}
 
-void::Framebuffer::clearToColor(color c) {
+void::framebuffer::clearToColor(color c) {
     for (int i = 0; i < (width * height); i++) {
         fbStorage[i] = c;
     }
 }
 
-void::Framebuffer::clearToVerticalGradient(color top, color bottom){
+void::framebuffer::clearToVerticalGradient(color top, color bottom){
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             float t = float(y) / float(height);
@@ -20,7 +20,7 @@ void::Framebuffer::clearToVerticalGradient(color top, color bottom){
     }
 }
 
-void::Framebuffer::clearToHorizontalGradient(color left, color right){
+void::framebuffer::clearToHorizontalGradient(color left, color right){
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             float t = float(x) / float(width);
@@ -30,11 +30,11 @@ void::Framebuffer::clearToHorizontalGradient(color left, color right){
     }
 }
 
-void::Framebuffer::setPixelColor(int x, int y, color c){
+void::framebuffer::setPixelColor(int x, int y, color c){
     fbStorage[(y * width) + x] = c;
 }
 
-void::Framebuffer::exportAsPNG(std::string filename) {
+void::framebuffer::exportAsPNG(std::string filename) {
     png::image< png::rgb_pixel > imData( width, height );
     for (size_t y = imData.get_height()-1; y > 0; y--)
     {

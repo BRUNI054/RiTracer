@@ -30,13 +30,11 @@ class vec3 {
     }
 
     float length_squared() const {
-        return var[0]*var[0] + var[1]*var[1] + var[2]*var[2];
+        return (var[0]*var[0]) + (var[1]*var[1]) + (var[2]*var[2]);
     }
 
     float dot(const vec3& v) const {
-        return var[0] * v.var[0]
-            + var[1] * v.var[1]
-            + var[2] * v.var[2];
+        return (var[0] * v.var[0]) + (var[1] * v.var[1]) + (var[2] * v.var[2]);
     }
 
     vec3 cross(const vec3& v) const {
@@ -72,7 +70,7 @@ class vec3 {
         return *this *= 1/t;
     }
 
-    std::ostream& operator<<(std::ostream& out) const {
+    std::ostream& operator << (std::ostream& out) const {
         return out << var[0] << ' ' << var[1] << ' ' << var[2];
     }
 

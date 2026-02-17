@@ -48,7 +48,7 @@ target_link_libraries(utest_ray PRIVATE cs4212-util)
 target_link_libraries(utest_ray PRIVATE render-lib)
 
 add_executable(utest_sphere
-  utest_ray.cpp 
+  utest_sphere.cpp 
 )
 target_link_libraries(utest_sphere PRIVATE Catch2::Catch2WithMain)
 target_link_libraries(utest_sphere PRIVATE cs4212-util)

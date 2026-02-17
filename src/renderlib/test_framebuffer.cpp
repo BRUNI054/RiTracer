@@ -1,13 +1,7 @@
-#include "Framebuffer.hpp"
-#include <iostream>
-#include <cstdlib>
-#include <cstring>
-#include <random>
-
-#include "./../png++/png.hpp"
+#include "framebuffer.hpp"
 
 int main() {
-    Framebuffer f(200, 200);
+    framebuffer f(200, 200);
     color red(1.0f, 0.0f, 0.0f);
     color green( 0.596f, 1.0f, 0.596f);
     f.clearToColor(red);

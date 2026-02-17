@@ -3,11 +3,14 @@
 #include <vector>
 #include "vec3.hpp"
 
-class Framebuffer{
+class framebuffer{
+private:
+    int width, height;
+    std::vector<color> fbStorage;
 public:
-    Framebuffer();
+    framebuffer();
 
-    Framebuffer(int w, int h);
+    framebuffer(int w, int h);
 
     void clearToColor(color c);
 
@@ -19,7 +22,8 @@ public:
 
     void exportAsPNG(std::string filename);
 
-private:
-    int width, height;
-    std::vector<color> fbStorage;
+    int get_width() {return width;}
+
+    int get_height() {return height;}
+
 };

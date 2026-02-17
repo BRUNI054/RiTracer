@@ -9,20 +9,53 @@ target_link_libraries(cs4212-util PUBLIC glm::glm)
 
 add_library (render-lib
   renderlib/vec3.hpp
-  renderlib/Framebuffer.hpp
-  renderlib/Framebuffer.cpp
+  renderlib/framebuffer.hpp
+  renderlib/framebuffer.cpp
+  renderlib/ray.hpp
+  renderlib/camera.hpp
+  renderlib/perspectiveCamera.hpp
+  renderlib/shape.hpp
+  renderlib/sphere.hpp
+  renderlib/triangle.hpp
+  renderlib/hitStruct.hpp
+  renderlib/shader.hpp
+  renderlib/scene.hpp
+  renderlib/normalShader.hpp
+  renderlib/lambertian.hpp
+  renderlib/polar.hpp
+  renderlib/blinnPhong.hpp
 )
 target_link_libraries(render-lib cs4212-util)
 target_link_libraries(render-lib ${Boost_PROGRAM_OPTIONS_LIBRARIES})
 target_link_libraries(render-lib PNG::PNG)
 target_link_libraries(render-lib ZLIB::ZLIB)
 
-add_executable(test_framebuffer
-  renderlib/test_framebuffer.cpp
-)
-target_link_libraries(test_framebuffer render-lib)
+# add_executable(test_framebuffer
+#   renderlib/test_framebuffer.cpp
+# )
+# target_link_libraries(test_framebuffer render-lib)
 
-add_executable(test_perspectiveCamera
-  renderlib/test_perspectiveCamera.cpp
+# add_executable(test_perspectiveCamera
+#   renderlib/test_perspectiveCamera.cpp
+# )
+# target_link_libraries(test_perspectiveCamera render-lib)
+
+add_executable(test_shader
+  renderlib/test_shader.cpp
 )
-target_link_libraries(test_perspectiveCamera render-lib)
+target_link_libraries(test_shader render-lib)
+
+# add_executable(test_sphere
+#   renderlib/test_sphere.cpp
+# )
+# target_link_libraries(test_sphere render-lib)
+
+# add_executable(test_triangle
+#   renderlib/test_triangle.cpp
+# )
+# target_link_libraries(test_triangle render-lib)
+
+add_executable(test_sun
+  renderlib/test_sun.cpp
+)
+target_link_libraries(test_sun render-lib)

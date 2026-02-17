@@ -16,7 +16,6 @@ public:
         b = -imageplaneHeight/2.0;
         u = l+((ri-l)*(i+0.5)/float(nx));
         v = b+((t-b)*(j+0.5)/float(ny));
-        ray temp = ray(r.origin(), (-W*focalLength) + (U*u) + (V*v));
-        r = temp;
+        r = ray(r.origin(), (W*focalLength) + (U*u) + (V*v));
     }
 };

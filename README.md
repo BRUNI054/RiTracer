@@ -1,2 +1,2 @@
-## How to compile and run the code:
-In the home directory of the project, run "cmake --preset=default && cd buildVCPkg && cmake --build ." to build the code, and then locate the executable you wish to run within the build folders. The vec3 class test will be labeled utest_vec and is located within the utests/ directory.
+## How to run the code:
+    Navigate to the specific test file you want to run inside the build folders, and run it. There's a decent amount of options right now, but the most current one is /src/test_sun

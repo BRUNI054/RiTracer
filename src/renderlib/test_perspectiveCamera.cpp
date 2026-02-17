@@ -1,10 +1,8 @@
-#include "Framebuffer.hpp"
+#include "framebuffer.hpp"
 #include "perspectiveCamera.hpp"
-#include <iostream>
-
 
 void testCamera(int nx, int ny, float width, float height, float foc, vec3 orig, vec3 dir) {
-    Framebuffer fb(nx, ny);
+    framebuffer fb(nx, ny);
 
     perspectiveCamera p = perspectiveCamera(nx, ny, height, width, foc, orig, dir);
     // perspectiveCamera p;
