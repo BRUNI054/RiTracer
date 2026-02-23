@@ -17,6 +17,11 @@ class vec3 {
     vec3(float var0, float var1, float var2, bool color = 0) : var{var0, var1, var2}, isColor(color)  {}
   
     //methods
+
+    void set_x(float x) {var[0] = x;}
+    void set_y(float y) {var[1] = y;}
+    void set_z(float z) {var[2] = z;}
+
     float x() const {return var[0];}
     float y() const {return var[1];}
     float z() const {return var[2];}

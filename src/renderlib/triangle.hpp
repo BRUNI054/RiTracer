@@ -42,6 +42,5 @@ public:
         h.viewDir = r.direction();
         h.shade = shade;
         return true;
-
     }
 };

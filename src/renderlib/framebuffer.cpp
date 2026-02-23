@@ -31,6 +31,13 @@ void::framebuffer::clearToHorizontalGradient(color left, color right){
 }
 
 void::framebuffer::setPixelColor(int x, int y, color c){
+    if (c.x() > 1.0f) {
+        c.set_x(1.0f);
+    }if (c.y() > 1.0f) {
+        c.set_y(1.0f);
+    }if (c.z() > 1.0f) {
+        c.set_z(1.0f);
+    }
     fbStorage[(y * width) + x] = c;
 }
 
