@@ -19,7 +19,9 @@ add_library (render-lib
   renderlib/triangle.hpp
   renderlib/hitStruct.hpp
   renderlib/shader.hpp
+  renderlib/shader.cpp
   renderlib/scene.hpp
+  # renderlib/scene.cpp
   renderlib/normalShader.hpp
   renderlib/lambertian.hpp
   renderlib/polar.hpp
@@ -40,10 +42,6 @@ target_link_libraries(render-lib ZLIB::ZLIB)
 # )
 # target_link_libraries(test_perspectiveCamera render-lib)
 
-add_executable(test_shader
-  renderlib/test_shader.cpp
-)
-target_link_libraries(test_shader render-lib)
 
 # add_executable(test_sphere
 #   renderlib/test_sphere.cpp
@@ -59,3 +57,18 @@ add_executable(test_sun
   renderlib/test_sun.cpp
 )
 target_link_libraries(test_sun render-lib)
+
+# add_executable(test_shader
+#   renderlib/test_shader.cpp
+# )
+# target_link_libraries(test_shader render-lib)
+
+# add_executable(test_antiAliasing
+#   renderlib/test_antiAliasing.cpp
+# )
+# target_link_libraries(test_antiAliasing render-lib)
+
+add_executable(test_shadows
+  renderlib/test_shadows.cpp
+)
+target_link_libraries(test_shadows render-lib)

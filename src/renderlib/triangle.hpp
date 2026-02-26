@@ -6,41 +6,88 @@
 
 class triangle : public shape {
 private:
-    point a, b, c;
+    point A, B, C;
     std::shared_ptr<shader> shade;
 
 public:
-    triangle() : a(point(1.0f,0.0f,0.0f)), b(point(0.0f, 1.0f, 0.0f)), c(point(0.0f, 0.0f, 1.0f)) {}
-    triangle(point a, point b, point c, std::shared_ptr<shader> shade) : a(a), b(b), c(c), shade(shade) {}
+    triangle() : A(point(1.0f,0.0f,0.0f)), B(point(0.0f, 1.0f, 0.0f)), C(point(0.0f, 0.0f, 1.0f)) {}
+    triangle(point a, point b, point c, std::shared_ptr<shader> shade) : A(a), B(b), C(c), shade(shade) {}
 
-    bool intersect(const ray& r, const float tmin, float& tmax, hitStruct& h) override {
-        float ma, mb, mc, md, me, mf, mg, mh, mi, mj, mk, ml, beta, gamma, t, M;
-        ma = a.x() - b.x(); md = a.x() - c.x(); mg = r.direction().x();
-        mb = a.y() - b.y(); me = a.y() - c.y(); mh = r.direction().y();
-        mc = a.z() - b.z(); mf = a.z() - c.z(); mi = r.direction().z();
-        mj = a.x() - r.origin().x(); 
-        mk = a.y() - r.origin().y();
-        ml = a.z() - r.origin().z();
-        
-        M = (ma*((me*mi)-(mh*mf))) + (mb*((mg*mf)-(md*mi))) + (mc*((md*mh)-(me*mg)));
-        
-        t = ((mf*((ma*mk)-(mj*mb))) + (me*((mj*mc)-(ma*ml))) + (md*((mb*ml)-(mk*mc))))/M;
-        if (tmax < t || tmin > t){return false;}
-        
-        gamma = ((mi*((ma*mk)-(mj*mb))) + (mh*((mj*mc)-(ma*ml))) + (mg*((mb*ml)-(mk*mc))))/M;
-        if (gamma < 0 || gamma > 1) {return false;}
-        
-        beta = ((mj*((me*mi)-(mh*mf))) + (mk*((mg*mf)-(md*mi))) + (ml*((md*mh)-(me*mg))))/M;
-        if (beta < 0 || beta > (1-gamma)) {return false;}
-        
+    bool intersect(const ray& r, const float tmin, float& tmax, hitStruct& hit) override {
+        vec3 edge2 = B - A;
+        vec3 edge1 = C - A;
+        vec3 P = r.direction().cross(edge2);
+        float det = edge1.dot(P);
+
+        constexpr float eps = 1e-8f;
+        if (det > -eps && det < eps) {return false;}
+
+        float inv_det = 1.0f / det;
+
+        vec3 T = r.origin() - A;
+
+        vec3 Q = T.cross(edge1);
+
+        float t = edge2.dot(Q) * inv_det;
+        if (t < tmin || t > tmax) {return false;}
+
+        float u = T.dot(P) * inv_det;
+        if (u < 0.0f || u > 1.0f) {return false;}
+
+        float v = r.direction().dot(Q) * inv_det;
+        if (v < 0.0f || u + v > 1.0f) {return false;}
+
         tmax = t;
-        h.t = t;
-        vec3 u = b-a;
-        vec3 v = c-a;
-        h.normal = -(u.cross(v).get_unit_vector());
-        h.intersectPoint = r.at(t);
-        h.viewDir = r.direction();
-        h.shade = shade;
+        hit.t = t;
+        hit.normal = edge1.cross(edge2).get_unit_vector();
+        hit.intersectPoint = r.at(t);
+        hit.viewDir = r.direction();
+        hit.shade = shade;
         return true;
+
+        // float a = A.x() - B.x();
+        // float b = A.y() - B.y();
+        // float c = A.z() - B.z();
+        // float d = A.x() - C.x();
+        // float e = A.y() - C.y();
+        // float f = A.z() - C.z();
+        // float g = r.direction().x();
+        // float h = r.direction().y();
+        // float i = r.direction().z();
+        // float j = A.x() - r.origin().x();
+        // float k = A.y() - r.origin().y();
+        // float l = A.z() - r.origin().z();
+
+        // float M = a * ((e* i) - (h * f)) + b * ((g * f) - (d * i)) + c * ((d * h) - (e * g));
+
+        // float t = -(f * ((a * k) - (j * b)) + e * ((j * c) - (a * l)) + d * ((b * l) - (k * c))) / M;
+
+
+        // if (t < tmin || t > tmax) {
+        //     return false;
+        // }
+
+        // float gamma = (i * ((a * k) - (j * b)) + h * ((j * c) - (a * l)) + g * ((b * l) - (k * c))) / M;
+
+
+        // if(gamma < 0 || gamma > 1) {
+        //     return false;
+        // }
+
+        // float beta = (j * ((e * i) - (h * f)) + k * ((g * f) - (d * i)) + l * ((d * h) - (e * g))) / M;
+
+        // if(beta < 0 || (beta > (1 - gamma))) {
+        //     return false;
+        // }
+        
+        // tmax = t;
+        // hit.t = t;
+        // vec3 u = B-A;
+        // vec3 v = C-A;
+        // hit.normal = -(u.cross(v).get_unit_vector());
+        // hit.intersectPoint = r.at(t);
+        // hit.viewDir = r.direction();
+        // hit.shade = shade;
+        // return true;
     }
 };

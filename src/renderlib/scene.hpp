@@ -16,6 +16,10 @@ public:
     scene(color background) : bg(background), l(light()) {}
     scene(color background, light light) : bg(background), l(light) {}
 
+    std::vector<std::shared_ptr<shape>> getObjects () {
+        return objects;
+    }
+
     void pushback_shape(std::shared_ptr<shape> s) {
         objects.push_back(s);
     }
@@ -40,6 +44,4 @@ public:
             return bg;
         }
     }
-
-
 };
