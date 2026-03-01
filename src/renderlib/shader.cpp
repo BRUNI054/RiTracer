@@ -9,7 +9,7 @@ bool shader::inShadow(hitStruct& h, vec3 lightDirection, std::shared_ptr<scene> 
     ray shadowRay(h.intersectPoint, (lightDirection));
     float tmax = lightDirection.length();
     for (int idx=0; idx<s_->getObjects().size(); idx++) {
-        if (s_->getObjects()[idx]->intersect(shadowRay, 0, tmax, shadowStruct)) {
+        if (s_->getObjects()[idx]->intersect(shadowRay, 1e-4f, tmax, shadowStruct)) {
             return true;
         }
     }

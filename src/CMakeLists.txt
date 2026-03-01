@@ -26,6 +26,7 @@ add_library (render-lib
   renderlib/lambertian.hpp
   renderlib/polar.hpp
   renderlib/blinnPhong.hpp
+  renderlib/mirror.hpp
 )
 target_link_libraries(render-lib cs4212-util)
 target_link_libraries(render-lib ${Boost_PROGRAM_OPTIONS_LIBRARIES})
@@ -72,3 +73,8 @@ add_executable(test_shadows
   renderlib/test_shadows.cpp
 )
 target_link_libraries(test_shadows render-lib)
+
+add_executable(test_mirror
+  renderlib/test_mirror.cpp
+)
+target_link_libraries(test_mirror render-lib)

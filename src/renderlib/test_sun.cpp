@@ -40,7 +40,7 @@ int main() {
             ray r;
             p.generateRay(x, y, r);
 
-            color c = s.computeRayColor(r, 1.0, 10000.0);
+            color c = s.computeRayColor(r, 1.0, 10000.0, 1);
 
             fb.setPixelColor(x, y, c);
         }

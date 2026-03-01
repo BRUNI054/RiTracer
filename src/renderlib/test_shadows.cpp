@@ -23,14 +23,17 @@ int main() {
     color forestGreen(0.0f, 0.5f, 0.2f);
 
     framebuffer fb(800, 800);
-    perspectiveCamera p(800, 800, 1.0f, 1.0f, 1.0f, vec3(0.0f, 3.0f, 0.0f), vec3(0.0f, -.1250f, -1.0f));
+    perspectiveCamera p(800, 800, 1.0f, 1.0f, 1.0f, vec3(0.0f, 5.0f, 0.0f), vec3(0.0f, -.250f, -1.0f));
     light l(vec3(2,6,0),vec3(1,1,1));
     scene s = scene(skyBlue, l);
 
     // s.pushback_shape(std::make_shared<sphere>(vec3(1.0f, 3.0f, -7.0f), 1.0f, std::make_shared<blinnPhong>(75.0f, yellow, s)));
     // s.pushback_shape(std::make_shared<sphere>(vec3(-1.0f, 1.0f, -10.0f), 1.0f, std::make_shared<blinnPhong>(75.0f, color(0.096f, 0.184f, 0.296f), s)));
     s.pushback_shape(std::make_shared<sphere>(vec3(0.5f, 3.0f, -5.0f), 1.0f, std::make_shared<blinnPhong>(100, forestGreen, std::make_shared<scene>(s))));
-    s.pushback_shape(std::make_shared<triangle>(vec3(-3.5f, 0, -10), vec3(-2, 4, -12), vec3(-0.5f, 0, -14), std::make_shared<lambertian>(yellow, std::make_shared<scene>(s))));
+    s.pushback_shape(std::make_shared<triangle>(vec3(-4.0f, 0, -10), vec3(-2, 4, -12), vec3(0.0f, 0, -10), std::make_shared<lambertian>(yellow, std::make_shared<scene>(s))));
+    s.pushback_shape(std::make_shared<triangle>(vec3(-4.0f, 0, -14), vec3(-2, 4, -12), vec3(0.0f, 0, -14), std::make_shared<lambertian>(yellow, std::make_shared<scene>(s))));
+    s.pushback_shape(std::make_shared<triangle>(vec3(-4.0f, 0, -10), vec3(-2, 4, -12), vec3(-4.0f, 0, -14), std::make_shared<lambertian>(yellow, std::make_shared<scene>(s))));
+    s.pushback_shape(std::make_shared<triangle>(vec3(0.0f, 0, -10), vec3(-2, 4, -12), vec3(0.0f, 0, -14), std::make_shared<lambertian>(yellow, std::make_shared<scene>(s))));
     s.pushback_shape(std::make_shared<sphere>(vec3(0.0f, -1000.0f, -10.0f), 1000.0f, std::make_shared<shadeToGreen>(purple, std::make_shared<scene>(s))));
 
     // s.pushback_shape(std::make_shared<triangle>(vec3(-4, 0, -11), vec3(-2, 4, -12), vec3(0, 0, -13), std::make_shared<lambertian>(yellow, s)));
@@ -49,7 +52,7 @@ int main() {
                     ray r;
                     p.generateRay(x+aOffset, y+bOffset, r);
 
-                    c += s.computeRayColor(r, 1.0, 10000.0);
+                    c += s.computeRayColor(r, 1.0, 10000.0, 1);
                 }
             }
             c = c / float(nSquare*nSquare);

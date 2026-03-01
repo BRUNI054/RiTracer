@@ -18,7 +18,7 @@ public:
         color blinn = (l.getColor()*std::pow(std::fmax(0.0f, (h.normal.dot(he))), p));
         finalColor += blinn;
         if(shader::inShadow(h, lightDirection, s_)){
-            return finalColor*0.0f;
+            return finalColor*0.5f;
         }
         return finalColor;
     }

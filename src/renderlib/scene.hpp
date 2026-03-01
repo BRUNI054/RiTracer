@@ -24,13 +24,15 @@ public:
         objects.push_back(s);
     }
 
-    color computeRayColor(const ray& r, float tmin, float tmax) {
+    color computeRayColor(const ray& r, float tmin, float tmax, int depth) {
         hitStruct h = hitStruct();
+        h.depth = depth;
+        if (depth <= 0) {return bg;}
         float localTmax = tmax;
 
         bool hitShape = false;
         for (int idx=0; idx<objects.size(); idx++) {
-            if (objects[idx]->intersect(r, tmin, localTmax, h )) {
+            if (objects[idx]->intersect(r, tmin, localTmax, h)) {
                 hitShape = true;
             }
         }

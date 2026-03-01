@@ -2,7 +2,6 @@
 
 #include "shader.hpp"
 #include "light.hpp"
-#include <iostream>
 
 class lambertian : public shader {
 private:
@@ -15,7 +14,7 @@ public:
         float lamber = std::fmax(0.0, h.normal.dot(lightDirection.get_unit_vector()));
         color finalColor = c_*lamber;
         if(shader::inShadow(h, lightDirection, s_)){
-            return finalColor*0.0F;
+            return finalColor*0.5F;
         }
         return finalColor;
     }

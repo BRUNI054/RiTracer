@@ -5,7 +5,7 @@
 class shader;
 
 struct hitStruct {
-
+    int depth;
     float t;
     vec3 normal;
     vec3 intersectPoint;
