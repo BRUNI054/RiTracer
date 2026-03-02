@@ -54,10 +54,10 @@ target_link_libraries(render-lib ZLIB::ZLIB)
 # )
 # target_link_libraries(test_triangle render-lib)
 
-add_executable(test_sun
-  renderlib/test_sun.cpp
-)
-target_link_libraries(test_sun render-lib)
+# add_executable(test_sun
+#   renderlib/test_sun.cpp
+# )
+# target_link_libraries(test_sun render-lib)
 
 # add_executable(test_shader
 #   renderlib/test_shader.cpp
@@ -69,12 +69,12 @@ target_link_libraries(test_sun render-lib)
 # )
 # target_link_libraries(test_antiAliasing render-lib)
 
-add_executable(test_shadows
-  renderlib/test_shadows.cpp
-)
-target_link_libraries(test_shadows render-lib)
+# add_executable(test_shadows
+#   renderlib/test_shadows.cpp
+# )
+# target_link_libraries(test_shadows render-lib)
 
-add_executable(test_mirror
-  renderlib/test_mirror.cpp
+add_executable(main
+  renderlib/main.cpp
 )
-target_link_libraries(test_mirror render-lib)
+target_link_libraries(main render-lib)

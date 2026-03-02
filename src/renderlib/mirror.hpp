@@ -12,6 +12,6 @@ public:
         vec3 d = h.viewDir.get_unit_vector();
         vec3 mirrorDirection = d - 2.0f*(d.dot(h.normal))*h.normal;
         ray r(h.intersectPoint, mirrorDirection);
-        return s_->computeRayColor(r, 0, std::numeric_limits<float>::infinity(), h.depth-1);
+        return s_->computeRayColor(r, 1e-4f, std::numeric_limits<float>::infinity(), h.depth-1);
     }
 };
