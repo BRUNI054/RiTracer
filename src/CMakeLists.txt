@@ -69,10 +69,10 @@ target_link_libraries(render-lib ZLIB::ZLIB)
 # )
 # target_link_libraries(test_antiAliasing render-lib)
 
-# add_executable(test_shadows
-#   renderlib/test_shadows.cpp
-# )
-# target_link_libraries(test_shadows render-lib)
+add_executable(test_shadows
+  renderlib/test_shadows.cpp
+)
+target_link_libraries(test_shadows render-lib)
 
 add_executable(main
   renderlib/main.cpp

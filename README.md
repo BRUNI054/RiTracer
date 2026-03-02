@@ -6,3 +6,5 @@
     ./main 150 100 4 3 CoolPic.png
 
     I reccomend prioritizing recursion depth over samples per pixel in terms of where you dedicate your somputing power, as the image looks cooler the deeper you go.
+
+    To check shadows, as they aren't super prominent in the image generated in main, run the test_shadows executable , also located in buildVCPkg/src
