@@ -19,7 +19,7 @@ float randomOffset() {
 
 int main(int argc, char* argv[]) {
     int width, height, samples, depth;
-    const char* output = "default";
+    const char* output = "default.png";
 
     if (argc >= 2) {
         width = std::atoi(argv[1]);
