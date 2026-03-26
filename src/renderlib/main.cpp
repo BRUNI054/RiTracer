@@ -48,8 +48,8 @@ int main(int argc, char* argv[]) {
     color forestGreen(0.0f, 0.5f, 0.2f);
 
     framebuffer fb(width, height);
-    perspectiveCamera p(width, height, 1.0f, 1.0f, 1.0f, vec3(0.0f, 4.0f, 0.0f), vec3(0.0f, -0.125f, -1.0f));
-    light l(vec3(3,5,-2),vec3(1,1,1));
+    perspectiveCamera p(width, height, 1.0f, 1.0f, 1.0f, vec3(0.0f, 8.0f, 0.0f), vec3(0.0f, -0.25f, -1.0f));
+    light l(vec3(1,15,-8),vec3(1,1,1));
     std::shared_ptr<scene> s = std::make_shared<scene>(skyBlue, l);
 
     
