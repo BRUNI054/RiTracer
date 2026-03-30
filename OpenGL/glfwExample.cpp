@@ -61,7 +61,7 @@ int main(void)
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-    glClearColor(0.0, 1.0, 0.5, 1.0);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     int fb_width, fb_height;
     glfwGetFramebufferSize(window, &fb_width, &fb_height);
@@ -83,7 +83,7 @@ int main(void)
     
     glGenBuffers(1, m_triangleVBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_triangleVBO[0]);
-    std::vector<float> host_VertexBuffer {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
+    std::vector<float> host_VertexBuffer {0.0f, -0.25f, 0.0f, 0.75f, 0.0f, 0.0f, 0.5f, -0.25f, 0.0f, 0.0f, 0.75f, 0.0f, 0.0f, 0.25f, 0.0f, 0.0f, 0.0f, 0.75f};
 
     int numBytes = host_VertexBuffer.size() * sizeof(float);
 
@@ -96,13 +96,20 @@ int main(void)
     glGenVertexArrays(1, &m_VAO);
     glBindVertexArray(m_VAO);
 
-    glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, m_triangleVBO[0]);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
+    
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat),(void*)0);
+    glEnableVertexAttribArray(0);
+    
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+    
     glBindVertexArray(0);
 
+
+\
     sivelab::GLSLObject shader;
-    shader.addShader( "vertexShader_passthrough.glsl", sivelab::GLSLObject::VERTEX_SHADER);
+    shader.addShader("vertexShader_passthrough.glsl", sivelab::GLSLObject::VERTEX_SHADER);
     shader.addShader("fragmentShader_passthrough.glsl", sivelab::GLSLObject::FRAGMENT_SHADER);
     shader.createProgram();
 
