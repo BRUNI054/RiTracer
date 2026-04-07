@@ -83,7 +83,7 @@ int main(void)
     
     glGenBuffers(1, m_triangleVBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_triangleVBO[0]);
-    std::vector<float> host_VertexBuffer {-3.0f, -3.0f, 2.0f, 0.75f, 0.0f, 0.0f, 3.0f, -3.0f, 2.0f, 0.0f, 0.75f, 0.0f, 0.0f, 3.0f, 2.0f, 0.0f, 0.0f, 0.75f};
+    std::vector<float> host_VertexBuffer {-3.0f, -3.0f, 0.0f, 0.75f, 0.0f, 0.0f, 3.0f, -3.0f, 0.0f, 0.0f, 0.75f, 0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.75f};
 
     int numBytes = host_VertexBuffer.size() * sizeof(float);
 
@@ -106,20 +106,16 @@ int main(void)
     
     glBindVertexArray(0);
 
-    // sivelab::GLSLObject shader;
-    // shader.addShader("vertexShader_passthrough.glsl", sivelab::GLSLObject::VERTEX_SHADER);
-    // shader.addShader("fragmentShader_passthrough.glsl", sivelab::GLSLObject::FRAGMENT_SHADER);
-    // shader.createProgram();
-
     // Create a shader using my GLSLObject class                                                                                                       
     sivelab::GLSLObject shader;
     shader.addShader( "vertexShader_withMatrices.glsl", sivelab::GLSLObject::VERTEX_SHADER );
     shader.addShader( "fragmentShader_barycentric.glsl", sivelab::GLSLObject::FRAGMENT_SHADER );
     shader.createProgram();
 
-    GLuint projMatrixID, viewMatrixID;
+    GLuint projMatrixID, viewMatrixID, modelMatrixID;
     projMatrixID = shader.createUniform( "projMatrix" );
     viewMatrixID = shader.createUniform( "viewMatrix" );
+    modelMatrixID = shader.createUniform( "modelMatrix" );
 
     // The ortho parameters, in order: left, right, bottom, top, zNear, zFar
     float halfWidth = 15.0 / 2.0;
@@ -131,10 +127,9 @@ int main(void)
     float bottom = -halfHeight;
     float top = halfHeight;
 
-    float near = 5.0f;
-    float far = -5.0f;
+    float near = 10.0f;
+    float far = -1.0f;
 
-    
 
     glm::mat4 M_ortho = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, near, far);
     glm::mat4 M_persp(
@@ -149,6 +144,8 @@ int main(void)
     glm::vec3 m_U(1,0,0), m_V(0,1,0), m_W(0,0,1);
 
     double timeDiff = 0.0, startFrameTime = 0.0, endFrameTime = 0.0;
+
+    float rotAngle = M_PI/100;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -186,6 +183,13 @@ int main(void)
         // create the view matrix from our camera data                                                                                                   
         glm::mat4 M_view = glm::lookAt( m_pos, m_pos - m_W, m_V );
 
+        // create and modify the model matrix for our triangle
+        
+        
+        glm::mat4 modelRotate = glm::rotate(glm::mat4(1.0), rotAngle, glm::vec3(0, 1, 0));
+        glm::mat4 modelTranslate = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 5));
+        glm::mat4 modelTransform = modelTranslate * modelRotate;
+        rotAngle += M_PI/100;
 
         /* Render your objects here */
         shader.activate();
@@ -193,6 +197,7 @@ int main(void)
         // copy from the host to the device the view matrix and the projection matrix                                                                                       
         glUniformMatrix4fv(projMatrixID, 1, GL_FALSE, glm::value_ptr( M_persp ));
         glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, glm::value_ptr( M_view ));
+        glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, glm::value_ptr(modelTransform));
 
         glBindVertexArray(m_VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
