@@ -7,6 +7,12 @@ target_compile_definitions(cs4212-util PUBLIC HAS_GLM)
 target_link_libraries(cs4212-util PRIVATE Boost::program_options)
 target_link_libraries(cs4212-util PUBLIC glm::glm)
 
+add_library (tinyOBJ
+  tiny_obj_loader/tiny_obj_loader.h
+)
+target_link_libraries(tinyOBJ ${Boost_PROGRAM_OPTIONS_LIBRARIES})
+
+
 add_library (render-lib
   renderlib/vec3.hpp
   renderlib/framebuffer.hpp
@@ -69,10 +75,10 @@ target_link_libraries(render-lib ZLIB::ZLIB)
 # )
 # target_link_libraries(test_antiAliasing render-lib)
 
-add_executable(test_shadows
-  renderlib/test_shadows.cpp
-)
-target_link_libraries(test_shadows render-lib)
+# add_executable(test_shadows
+#   renderlib/test_shadows.cpp
+# )
+# target_link_libraries(test_shadows render-lib)
 
 add_executable(main
   renderlib/main.cpp

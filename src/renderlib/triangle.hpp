@@ -13,6 +13,13 @@ public:
     triangle() : A(point(1.0f,0.0f,0.0f)), B(point(0.0f, 1.0f, 0.0f)), C(point(0.0f, 0.0f, 1.0f)) {}
     triangle(point a, point b, point c, std::shared_ptr<shader> shade) : A(a), B(b), C(c), shade(shade) {}
 
+    std::vector<float> returnVertices(int sphereDepth) override {
+        vec3 N = (B-A).cross(C-A).get_unit_vector();
+        return {A.x(), A.y(), A.z(), B.x(), B.y(), B.z(), C.x(), C.y(), C.z(), N.x(), N.y(), N.z()};
+    }
+
+    
+
     bool intersect(const ray& r, const float tmin, float& tmax, hitStruct& hit) override {
         vec3 edge2 = B - A;
         vec3 edge1 = C - A;

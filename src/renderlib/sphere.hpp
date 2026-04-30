@@ -4,6 +4,7 @@
 #include "vec3.hpp"
 #include <memory>
 #include <iostream>
+#include <array>
 
 
 class sphere : public shape {
