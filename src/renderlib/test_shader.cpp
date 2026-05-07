@@ -16,7 +16,7 @@ int main() {
     light l(vec3(2,2,-6), vec3(1,1,1));
     scene s = scene(color(0.5f, 0.5f, 0.5f), l);
     // s.pushback_shape(std::make_shared<sphere>(vec3(0.0f, 0.0f, -10.0f), 1.0f, std::make_shared<blinnPhong>(75.0f, color(0, 1, 0))));
-    s.pushback_shape(std::make_shared<sphere>(vec3(0.0f, 0.0f, -10.0f), 1.0f, std::make_shared<blinnPhong>(75.0, color(0.096f, 0.184f, 0.296f))));
+    s.pushback_shape(std::make_shared<sphere>(vec3(0.0f, 0.0f, -10.0f), 1.0f, std::make_shared<lambertian>(75.0, color(0.096f, 0.184f, 0.296f))));
 
     // s.pushback_shape(std::make_shared<triangle>(vec3(-1.0f, -1.0f, 20.0f), vec3(0.0f, 1.0f, 20.0f), vec3(1.0f, -1.0f, 20.0f), std::make_shared<blinnPhong>(200.0f, color(0, 1, 0))));
     for (int x = 0; x < fb.get_width(); x++) {

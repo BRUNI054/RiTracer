@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
     // Create a shader using my GLSLObject class                                                                                                       
     sivelab::GLSLObject shader;
     shader.addShader( "vertexShader_prepFrag.glsl", sivelab::GLSLObject::VERTEX_SHADER );
-    shader.addShader( "fragmentShader_BlinnPhong.glsl", sivelab::GLSLObject::FRAGMENT_SHADER );
+    shader.addShader( "fragmentShader_Lambertian.glsl", sivelab::GLSLObject::FRAGMENT_SHADER );
     shader.createProgram();
 
     GLuint projMatrixID, viewMatrixID, modelMatrixID, normalMatrixID, lightPosID, diffuseComponentID, camPosID;
@@ -145,8 +145,8 @@ int main(int argc, char* argv[])
     float bottom = -halfHeight;
     float top = halfHeight;
 
-    float near = 5.0f;
-    float far = -5.0f;
+    float near = 0.1f;
+    float far = 10000.0f;
 
 
     glm::mat4 M_ortho = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, near, far);
@@ -158,8 +158,8 @@ int main(int argc, char* argv[])
 
     double timeDiff = 0.0, startFrameTime = 0.0, endFrameTime = 0.0;
 
-    glm::vec4 lightPos(0.0f, 0.0f, -7.0f, 0.0f);
-    glm::vec3 diffuseComponent(0.0f, 1.0f, 1.0f);
+    glm::vec4 lightPos(2.0f, 2.0f, -6.0f, 0.0f);
+    glm::vec3 diffuseComponent(0.096f, 0.184f, 0.296f);
 
     float rotAngle = 0.0;
 
@@ -211,8 +211,8 @@ int main(int argc, char* argv[])
         glm::mat4 M_view = glm::lookAt( m_pos, m_pos - m_W, m_V );
 
         // modify the model matrix for our triangle
-        glm::mat4 modelTranslate = glm::translate(glm::mat4(1.0), glm::vec3(0, -1.5, -10.0f));
-        glm::mat4 modelScale = glm::scale(glm::mat4(1.0), {20.0, 20.0, 20.0});
+        glm::mat4 modelTranslate = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, -10.0f));
+        glm::mat4 modelScale = glm::scale(glm::mat4(1.0), {1.0, 1.0, 1.0});
         glm::mat4 modelTransform = modelTranslate * modelScale;
 
         glm::mat4 normalTransform = glm::transpose(glm::inverse(modelTransform));

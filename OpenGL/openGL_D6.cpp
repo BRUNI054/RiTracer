@@ -208,8 +208,8 @@ int main(void)
     float bottom = -halfHeight;
     float top = halfHeight;
 
-    float near = 5.0f;
-    float far = -5.0f;
+    float near = 0.1f;
+    float far = 10000.0f;
 
     glm::mat4 M_ortho = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, near, far);
     glm::mat4 M_persp = glm::perspective(glm::radians(60.0f), 1.0f, near, far);
@@ -225,31 +225,32 @@ int main(void)
     std::random_device rd;
 
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> dis = std::uniform_real_distribution<float>(0.125f * M_PI, 0.25f * M_PI);
+    std::uniform_real_distribution<float> dis = std::uniform_real_distribution<float>(0.0001f, 0.25f * M_PI);
 
 
     float rotAngleX = 0;
     float rotAngleY = 0;
-    // float rotAngleZ = 0;
-    float rotAngleChangeChange = M_PI/1500;
-    float rotAngleChangeX = dis(gen);
-    float rotAngleChangeY = dis(gen);
-    // float rotAngleChangeXChange;
-    // float rotAngleChangeYChange;
-    // if(rotAngleChangeX < rotAngleChangeY) {
-    //     rotAngleChangeYChange = rotAngleChangeChange * (1-(rotAngleChangeX/rotAngleChangeY));
-    //     rotAngleChangeXChange = rotAngleChangeChange * (rotAngleChangeX/rotAngleChangeY);
-    // }
-    // if(rotAngleChangeX > rotAngleChangeY) {
-    //     rotAngleChangeXChange = rotAngleChangeChange * (1-(rotAngleChangeY/rotAngleChangeX));
-    //     rotAngleChangeYChange = rotAngleChangeChange * (rotAngleChangeY/rotAngleChangeX);
-    // }
-    // else {
-    //     rotAngleChangeXChange = rotAngleChangeChange * 0.5;
-    //     rotAngleChangeYChange = rotAngleChangeChange * 0.5;
-    // }
-    // float rotAngleChangeZ = dis(gen);
 
+    float rotAngleDeceleration = M_PI/1000;
+    float rotAngleXVelocity = dis(gen);
+    float rotAngleYVelocity = dis(gen);
+    float rotAngleYDeceleration;// = rotAngleDeceleration;
+    float rotAngleXDeceleration;// = rotAngleDeceleration;
+
+    float rotRatio = fmin((rotAngleYVelocity/rotAngleXVelocity), (rotAngleXVelocity/rotAngleYVelocity));
+
+    if (rotAngleXVelocity - rotAngleYVelocity >= 0.0f) {
+        std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
+        rotAngleYDeceleration = rotRatio * rotAngleDeceleration;
+        rotAngleXDeceleration = (1.0f-rotRatio) * rotAngleDeceleration;
+        std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
+    }
+    else {
+        std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
+        rotAngleXDeceleration = rotRatio * rotAngleDeceleration;
+        rotAngleYDeceleration = (1.0f-rotRatio) * rotAngleDeceleration;
+        std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
+    }
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -284,8 +285,23 @@ int main(void)
         }
 
         if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-            rotAngleChangeX = dis(gen);
-            rotAngleChangeY = dis(gen);
+            rotAngleXVelocity = dis(gen);
+            rotAngleYVelocity = dis(gen);
+            rotRatio = fmin((rotAngleYVelocity/rotAngleXVelocity), (rotAngleXVelocity/rotAngleYVelocity));
+
+            if (rotAngleXVelocity - rotAngleYVelocity > 0.0f) {
+                std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
+                rotAngleYDeceleration = rotRatio * rotAngleDeceleration;
+                rotAngleXDeceleration = (1.0f-rotRatio) * rotAngleDeceleration;
+                std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
+
+            }
+            else {
+                std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
+                rotAngleXDeceleration = rotRatio * rotAngleDeceleration;
+                rotAngleYDeceleration = (1.0f-rotRatio) * rotAngleDeceleration;
+                std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
+            }
         }
 
         // create the view matrix from our camera data                                                                                                   
@@ -294,35 +310,25 @@ int main(void)
         // modify the model matrix for our triangle
         glm::mat4 modelRotateX = glm::rotate(glm::mat4(1.0), rotAngleX, glm::vec3(1, 0, 0));
         glm::mat4 modelRotateY = glm::rotate(glm::mat4(1.0), rotAngleY, glm::vec3(0, 1, 0));
-        // glm::mat4 modelRotateZ = glm::rotate(glm::mat4(1.0), rotAngleZ, glm::vec3(0, 0, 1));
-        glm::mat4 modelRotate = 
-        // modelRotateZ * 
-        modelRotateY * modelRotateX;
+        glm::mat4 modelRotate = modelRotateY * modelRotateX;
         glm::mat4 modelTranslate = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, -11));
         glm::mat4 modelScale = glm::scale(glm::mat4(1.0), {3.0f, 3.0f, 3.0f});
         glm::mat4 modelTransform = modelTranslate * modelRotate * modelScale;
         
-        rotAngleChangeX -= rotAngleChangeChange;
-        rotAngleChangeY -= rotAngleChangeChange;
-        // rotAngleChangeZ -= rotAngleChangeChange;
+        rotAngleXVelocity -= rotAngleXDeceleration;
+        rotAngleYVelocity -= rotAngleYDeceleration;
 
-        if (rotAngleChangeX <= 0.0f) {
-            rotAngleChangeX = 0.0f;
+        if (rotAngleXVelocity <= 0.0f) {
+            rotAngleXVelocity = 0.0f;
         }
-        if (rotAngleChangeY <= 0.0f) {
-            rotAngleChangeY = 0.0f;
+        if (rotAngleYVelocity <= 0.0f) {
+            rotAngleYVelocity = 0.0f;
         }
-        // if (rotAngleChangeZ <= 0.0f) {
-        //     rotAngleChangeZ = 0.0f;
-        // }
 
-        rotAngleX += rotAngleChangeX;
-        rotAngleY += rotAngleChangeY;
-        // rotAngleZ += rotAngleChangeZ;
+        rotAngleX += rotAngleXVelocity;
+        rotAngleY += rotAngleYVelocity;
 
-        if (rotAngleChangeX == 0.0f && rotAngleChangeY == 0.0f 
-            // && rotAngleChangeZ == 0.0f
-        ) {
+        if (rotAngleXVelocity == 0.0f && rotAngleYVelocity == 0.0f) {
             float temp;
             temp = std::fmod(rotAngleX, M_PI/2);
             if (temp < M_PI/4) rotAngleX -= temp;
@@ -330,15 +336,9 @@ int main(void)
             temp = std::fmod(rotAngleY, M_PI/2);
             if (temp < M_PI/4) rotAngleY -= temp;
             else rotAngleY += ((M_PI/2)-temp);
-            // temp = std::fmod(rotAngleZ, M_PI/2);
-            // if (temp < M_PI/4) rotAngleZ -= temp;
-            // else rotAngleZ += ((M_PI/2)-temp);
         }
-        
 
         glm::mat4 normalTransform = glm::transpose(glm::inverse(modelTransform));
-
-        
 
         /* Render your objects here */
         shader.activate();

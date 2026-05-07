@@ -44,7 +44,8 @@ class objLoader {
             size_t index_offset = 0;
             for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
                 size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
-                std::vector<float> temp;
+                std::vector<float> vertices;
+                glm::vec3 normal;
                 // Loop over vertices in the face.
                 for (size_t v = 0; v < fv; v++) {
                     // access to vertex
@@ -57,20 +58,26 @@ class objLoader {
                     tinyobj::real_t green = 1.0f;
                     tinyobj::real_t blue  = 1.0f;
 
+                    if (idx.normal_index >= 0) {
+                        tinyobj::real_t nx = attrib.normals[3*size_t(idx.normal_index)+0];
+                        tinyobj::real_t ny = attrib.normals[3*size_t(idx.normal_index)+1];
+                        tinyobj::real_t nz = attrib.normals[3*size_t(idx.normal_index)+2];
+                    }
+
                     // Optional: vertex colors
                     red   = attrib.colors[3*size_t(idx.vertex_index)+0];
                     green = attrib.colors[3*size_t(idx.vertex_index)+1];
                     blue  = attrib.colors[3*size_t(idx.vertex_index)+2];
 
                     std::vector<float> temp2 = {vx, vy, vz, red, green, blue};
-                    temp.insert(temp.end(), temp2.begin(), temp2.end());
+                    vertices.insert(vertices.end(), temp2.begin(), temp2.end());
                 }
                 
-                glm::vec3 edge1 = glm::vec3(temp[6], temp[7], temp[8]) - glm::vec3(temp[0], temp[1], temp[2]);
-                glm::vec3 edge2 = glm::vec3(temp[12], temp[13], temp[14]) - glm::vec3(temp[0], temp[1], temp[2]);
-                glm::vec3 normal = glm::normalize(glm::cross(edge2, edge1));
+                glm::vec3 edge1 = glm::vec3(vertices[6], vertices[7], vertices[8]) - glm::vec3(vertices[0], vertices[1], vertices[2]);
+                glm::vec3 edge2 = glm::vec3(vertices[12], vertices[13], vertices[14]) - glm::vec3(vertices[0], vertices[1], vertices[2]);
+                normal = glm::normalize(glm::cross(edge2, edge1));
                 for (size_t v = 0; v < fv; v++) {
-                    std::vector<float> withNormals = {temp[v*6], temp[(v*6) + 1], temp[(v*6) + 2], normal.x, normal.y, normal.z, temp[(v*6) + 3], temp[(v*6) + 4], temp[(v*6) + 5]};
+                    std::vector<float> withNormals = {vertices[v*6], vertices[(v*6) + 1], vertices[(v*6) + 2], normal.x, normal.y, normal.z, vertices[(v*6) + 3], vertices[(v*6) + 4], vertices[(v*6) + 5]};
                     VBO_data.insert(VBO_data.end(), withNormals.begin(), withNormals.end());
                 }
 
