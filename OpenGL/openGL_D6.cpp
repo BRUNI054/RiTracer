@@ -186,7 +186,7 @@ int main(void)
     // Create a shader using my GLSLObject class                                                                                                       
     sivelab::GLSLObject shader;
     shader.addShader( "vertexShader_prepFrag.glsl", sivelab::GLSLObject::VERTEX_SHADER );
-    shader.addShader( "fragmentShader_BlinnPhong.glsl", sivelab::GLSLObject::FRAGMENT_SHADER );
+    shader.addShader( "fragmentShader_Lambertian.glsl", sivelab::GLSLObject::FRAGMENT_SHADER );
     shader.createProgram();
 
     GLuint projMatrixID, viewMatrixID, modelMatrixID, normalMatrixID, lightPosID, diffuseComponentID, camPosID;
@@ -219,7 +219,7 @@ int main(void)
 
     double timeDiff = 0.0, startFrameTime = 0.0, endFrameTime = 0.0;
 
-    glm::vec4 lightPos(0.0f, 0.0f, -7.0f, 0.0f);
+    glm::vec4 lightPos(1.0f, 1.0f, -5.0f, 0.0f);
     glm::vec3 diffuseComponent(0.0f, 1.0f, 0.0f);
 
     std::random_device rd;
@@ -315,8 +315,8 @@ int main(void)
         glm::mat4 modelScale = glm::scale(glm::mat4(1.0), {3.0f, 3.0f, 3.0f});
         glm::mat4 modelTransform = modelTranslate * modelRotate * modelScale;
         
-        rotAngleXVelocity -= rotAngleXDeceleration;
-        rotAngleYVelocity -= rotAngleYDeceleration;
+        rotAngleXVelocity -= rotAngleDeceleration;
+        rotAngleYVelocity -= rotAngleDeceleration;
 
         if (rotAngleXVelocity <= 0.0f) {
             rotAngleXVelocity = 0.0f;

@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
     int fb_width, fb_height;
     glfwGetFramebufferSize(window, &fb_width, &fb_height);
@@ -158,7 +158,7 @@ int main(int argc, char* argv[])
 
     double timeDiff = 0.0, startFrameTime = 0.0, endFrameTime = 0.0;
 
-    glm::vec4 lightPos(2.0f, 2.0f, -6.0f, 0.0f);
+    glm::vec4 lightPos(6.0f, -6.0f, -6.0f, 0.0f);
     glm::vec3 diffuseComponent(0.096f, 0.184f, 0.296f);
 
     float rotAngle = 0.0;
@@ -211,7 +211,7 @@ int main(int argc, char* argv[])
         glm::mat4 M_view = glm::lookAt( m_pos, m_pos - m_W, m_V );
 
         // modify the model matrix for our triangle
-        glm::mat4 modelTranslate = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, -10.0f));
+        glm::mat4 modelTranslate = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, -8.0f));
         glm::mat4 modelScale = glm::scale(glm::mat4(1.0), {1.0, 1.0, 1.0});
         glm::mat4 modelTransform = modelTranslate * modelScale;
 
