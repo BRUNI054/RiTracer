@@ -14,6 +14,7 @@
 
 #include "openGL_objLoader.hpp"
 
+
 int CheckGLErrors(const char *s)
 {
     int errCount = 0;
@@ -29,7 +30,7 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
-    objLoader loader(filename);
+    objLoader loader(filename, false);
 
     /* Initialize the library */
     if (!glfwInit()) {
@@ -117,13 +118,16 @@ int main(int argc, char* argv[])
 
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
     glEnableVertexAttribArray(2);
+
+    // glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (void*)(9 * sizeof(GLfloat)));
+    // glEnableVertexAttribArray(3);
     
     glBindVertexArray(0);
 
     // Create a shader using my GLSLObject class                                                                                                       
     sivelab::GLSLObject shader;
-    shader.addShader( "vertexShader_prepFrag.glsl", sivelab::GLSLObject::VERTEX_SHADER );
-    shader.addShader( "fragmentShader_Lambertian.glsl", sivelab::GLSLObject::FRAGMENT_SHADER );
+    shader.addShader( "vertexShader_withTextures.glsl", sivelab::GLSLObject::VERTEX_SHADER );
+    shader.addShader( "fragmentShader_LambertianWithTextures.glsl", sivelab::GLSLObject::FRAGMENT_SHADER );
     shader.createProgram();
 
     GLuint projMatrixID, viewMatrixID, modelMatrixID, normalMatrixID, lightPosID, diffuseComponentID, camPosID;

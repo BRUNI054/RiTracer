@@ -12,6 +12,9 @@
 
 #include "../src/renderlib/sphere.hpp"
 #include "../src/renderlib/vec3.hpp"
+#include "./../src/png++/png.hpp"
+
+#include "openGL_objLoader.hpp"
 
 #include "GLSL.h"
 
@@ -28,6 +31,11 @@ int CheckGLErrors(const char *s)
 int main(void)
 {
     
+    std::string filename = "die_19mm.obj";
+    objLoader loader(filename, false);
+
+
+
     /* Initialize the library */
     if (!glfwInit()) {
         exit (-1);
@@ -85,80 +93,83 @@ int main(void)
     glGenBuffers(1, m_triangleVBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_triangleVBO[0]);
 
-    std::vector<float> host_VertexBuffer {
-        -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-        -1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-        1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-        -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-        -1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-        -1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-        -1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-        -1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-        1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, -1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-        1.0f, -1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-        -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-        -1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-        -1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-        1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-        1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-        1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-        -1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-        -1.0f, 1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        -1.0f, 1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f
-        // -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
-        // -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 
-        // 1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f,
-        // 1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 
-        // 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 
-        // -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
-        // -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
-        // -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f,
-        // -1.0f, 1.0f, 1.0f, 1.0f, -1.0f, -1.0f,
-        // -1.0f, 1.0f, 1.0f, 1.0f, -1.0f, -1.0f,
-        // -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f,
-        // -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
-        // 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f,
-        // 1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f,
-        // 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f,
-        // 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f,
-        // 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f,
-        // 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f,
-        // -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f,
-        // -1.0f, 1.0f, 1.0f, 1.0f, -1.0f, -1.0f,
-        // 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f,
-        // 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f,
-        // 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f,
-        // -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f,
-        // -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
-        // -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f,
-        // 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f,
-        // 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f,
-        // 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f,
-        // -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
-        // -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f,
-        // -1.0f, 1.0f, 1.0f, 1.0f, -1.0f, -1.0f,
-        // 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f,
-        // 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f,
-        // 1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f,
-        // -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f
-    };
+    std::vector<float> host_VertexBuffer = loader.get_VBO_data();
+    
+    // {
+    //     -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+    //     -1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+    //     1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+    //     1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+    //     1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+    //     -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+    //     -1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    //     -1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    //     -1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    //     -1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    //     -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    //     -1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    //     1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+    //     1.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+    //     1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+    //     1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+    //     1.0f, -1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+    //     1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+    //     -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+    //     -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+    //     1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+    //     1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+    //     1.0f, -1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+    //     -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+    //     -1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+    //     -1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+    //     1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+    //     1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+    //     1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+    //     -1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+    //     -1.0f, 1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+    //     -1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+    //     1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+    //     1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+    //     1.0f, 1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+    //     -1.0f, 1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f
+    //     // -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
+    //     // -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 
+    //     // 1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f,
+    //     // 1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 
+    //     // 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 
+    //     // -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
+    //     // -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
+    //     // -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f,
+    //     // -1.0f, 1.0f, 1.0f, 1.0f, -1.0f, -1.0f,
+    //     // -1.0f, 1.0f, 1.0f, 1.0f, -1.0f, -1.0f,
+    //     // -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f,
+    //     // -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
+    //     // 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f,
+    //     // 1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f,
+    //     // 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f,
+    //     // 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f,
+    //     // 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f,
+    //     // 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f,
+    //     // -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f,
+    //     // -1.0f, 1.0f, 1.0f, 1.0f, -1.0f, -1.0f,
+    //     // 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f,
+    //     // 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f,
+    //     // 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f,
+    //     // -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f,
+    //     // -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
+    //     // -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f,
+    //     // 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f,
+    //     // 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f,
+    //     // 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f,
+    //     // -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
+    //     // -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f,
+    //     // -1.0f, 1.0f, 1.0f, 1.0f, -1.0f, -1.0f,
+    //     // 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f,
+    //     // 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f,
+    //     // 1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f,
+    //     // -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f
+    // };
+
     int numBytes = host_VertexBuffer.size() * sizeof(float);
 
     glBufferData(GL_ARRAY_BUFFER, numBytes, host_VertexBuffer.data(), GL_STATIC_DRAW);
@@ -180,8 +191,47 @@ int main(void)
 
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
     glEnableVertexAttribArray(2);
+
+    // glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (void*)(9 * sizeof(GLfloat)));
+    // glEnableVertexAttribArray(3);
     
     glBindVertexArray(0);
+
+    //Texture Mapping Code
+    // std::string texFilename = "D6classic_albeldo.png";
+    // std::cout << "Reading texture map data from file: " << texFilename << std::endl;
+    // png::image<png::rgb_pixel> texPNGImage;
+    // texPNGImage.read(texFilename);
+
+    // int pngWidth = texPNGImage.get_width();
+    // int pngHeight = texPNGImage.get_height();
+
+    // std::vector<float> texData(pngHeight * pngWidth * 3);
+
+    // GLuint texID;
+    // glGenTextures(1, &texID);
+    // glBindTexture(GL_TEXTURE_2D, texID);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 
+    //             pngWidth, pngHeight, 
+    //             0, GL_RGB, GL_FLOAT, texData.data());
+    // glBindTexture(GL_TEXTURE_2D, 0);
+
+    
+
+    // size_t idx = 0;
+    // for (size_t row = 0; row < pngHeight; ++row) {
+    //     for (size_t col = 0; col < pngWidth; ++col) {
+    //         png::rgb_pixel pixel = texPNGImage[pngHeight - row - 1][col]; // <-- notice the flip of height!!!
+    //         texData[idx++] = pixel.red / 255.0f;
+    //         texData[idx++] = pixel.green / 255.0f;
+    //         texData[idx++] = pixel.blue / 255.0f;
+    //     }
+    // }
+
 
     // Create a shader using my GLSLObject class                                                                                                       
     sivelab::GLSLObject shader;
@@ -189,7 +239,7 @@ int main(void)
     shader.addShader( "fragmentShader_Lambertian.glsl", sivelab::GLSLObject::FRAGMENT_SHADER );
     shader.createProgram();
 
-    GLuint projMatrixID, viewMatrixID, modelMatrixID, normalMatrixID, lightPosID, diffuseComponentID, camPosID;
+    GLuint projMatrixID, viewMatrixID, modelMatrixID, normalMatrixID, lightPosID, diffuseComponentID, camPosID; // texUnitID;
     projMatrixID = shader.createUniform( "projMatrix" );
     viewMatrixID = shader.createUniform( "viewMatrix" );
     modelMatrixID = shader.createUniform( "modelMatrix" );
@@ -197,6 +247,8 @@ int main(void)
     lightPosID = shader.createUniform( "lightPosWorld" );
     diffuseComponentID = shader.createUniform( "diffuseComponent" );
     camPosID = shader.createUniform( "cameraPosition" );
+    // texUnitID = shader.createUniform( "texture" );
+    
 
     // The ortho parameters, in order: left, right, bottom, top, zNear, zFar
     float halfWidth = 15.0 / 2.0;
@@ -219,8 +271,9 @@ int main(void)
 
     double timeDiff = 0.0, startFrameTime = 0.0, endFrameTime = 0.0;
 
-    glm::vec4 lightPos(1.0f, 1.0f, -5.0f, 0.0f);
-    glm::vec3 diffuseComponent(0.0f, 1.0f, 0.0f);
+    glm::vec4 lightPos(-1.0f, .10f, -5.0f, 0.0f);
+    glm::vec3 diffuseComponent(0.937f, 0.878f, 0.804f);
+    // diffuseComponent = glm::vec3(0.0, 1.0, 0.0);
 
     std::random_device rd;
 
@@ -240,16 +293,12 @@ int main(void)
     float rotRatio = fmin((rotAngleYVelocity/rotAngleXVelocity), (rotAngleXVelocity/rotAngleYVelocity));
 
     if (rotAngleXVelocity - rotAngleYVelocity >= 0.0f) {
-        std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
         rotAngleYDeceleration = rotRatio * rotAngleDeceleration;
         rotAngleXDeceleration = (1.0f-rotRatio) * rotAngleDeceleration;
-        std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
     }
     else {
-        std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
         rotAngleXDeceleration = rotRatio * rotAngleDeceleration;
         rotAngleYDeceleration = (1.0f-rotRatio) * rotAngleDeceleration;
-        std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
     }
 
     /* Loop until the user closes the window */
@@ -290,17 +339,13 @@ int main(void)
             rotRatio = fmin((rotAngleYVelocity/rotAngleXVelocity), (rotAngleXVelocity/rotAngleYVelocity));
 
             if (rotAngleXVelocity - rotAngleYVelocity > 0.0f) {
-                std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
                 rotAngleYDeceleration = rotRatio * rotAngleDeceleration;
                 rotAngleXDeceleration = (1.0f-rotRatio) * rotAngleDeceleration;
-                std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
 
             }
             else {
-                std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
                 rotAngleXDeceleration = rotRatio * rotAngleDeceleration;
                 rotAngleYDeceleration = (1.0f-rotRatio) * rotAngleDeceleration;
-                std::cout << rotAngleDeceleration << std::endl << rotAngleYDeceleration << std::endl << rotAngleXDeceleration << std::endl;
             }
         }
 
@@ -308,12 +353,13 @@ int main(void)
         glm::mat4 M_view = glm::lookAt( m_pos, m_pos - m_W, m_V );
 
         // modify the model matrix for our triangle
+        glm::mat4 modelTranslatePreRotate = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, -5));
         glm::mat4 modelRotateX = glm::rotate(glm::mat4(1.0), rotAngleX, glm::vec3(1, 0, 0));
         glm::mat4 modelRotateY = glm::rotate(glm::mat4(1.0), rotAngleY, glm::vec3(0, 1, 0));
         glm::mat4 modelRotate = modelRotateY * modelRotateX;
-        glm::mat4 modelTranslate = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, -11));
-        glm::mat4 modelScale = glm::scale(glm::mat4(1.0), {3.0f, 3.0f, 3.0f});
-        glm::mat4 modelTransform = modelTranslate * modelRotate * modelScale;
+        glm::mat4 modelTranslatePostRotate = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, -11));
+        glm::mat4 modelScale = glm::scale(glm::mat4(1.0), {0.25f, 0.25f, 0.25f});
+        glm::mat4 modelTransform = modelTranslatePostRotate * modelRotate * modelScale * modelTranslatePreRotate;
         
         rotAngleXVelocity -= rotAngleDeceleration;
         rotAngleYVelocity -= rotAngleDeceleration;
@@ -353,8 +399,12 @@ int main(void)
         glUniform3fv(diffuseComponentID, 1, glm::value_ptr( diffuseComponent ));
         glUniform3fv(camPosID, 1, glm::value_ptr( m_pos ));
 
+        // glActiveTexture(GL_TEXTURE0);
+        // glBindTexture(GL_TEXTURE_2D, texID);
+        // glUniform1i(texUnitID, 0);
+
         glBindVertexArray(m_VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawArrays(GL_TRIANGLES, 0, loader.get_VBO_data().size()/9);
         glBindVertexArray(0);
 
         shader.deactivate();

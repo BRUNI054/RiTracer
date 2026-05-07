@@ -21,7 +21,7 @@ class objLoader {
     std::vector<float> VBO_data;
 
     public:
-    objLoader(std::string _filename) {
+    objLoader(std::string _filename, bool textured) {
         filename = _filename;
         if (!reader.ParseFromFile(filename, reader_config)) {
             if(!reader.Error().empty()) {
@@ -45,7 +45,10 @@ class objLoader {
             for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
                 size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
                 std::vector<float> vertices;
-                glm::vec3 normal;
+                glm::vec3 normal = glm::vec3(0, 0, 0);
+                glm::vec3 normalCheck = normal;
+                std::vector<float> normals;
+                std::vector<float> texCoords;
                 // Loop over vertices in the face.
                 for (size_t v = 0; v < fv; v++) {
                     // access to vertex
@@ -62,6 +65,16 @@ class objLoader {
                         tinyobj::real_t nx = attrib.normals[3*size_t(idx.normal_index)+0];
                         tinyobj::real_t ny = attrib.normals[3*size_t(idx.normal_index)+1];
                         tinyobj::real_t nz = attrib.normals[3*size_t(idx.normal_index)+2];
+                        normals.push_back(nx);
+                        normals.push_back(ny);
+                        normals.push_back(nz);
+                    }
+
+                    if (idx.texcoord_index >= 0 && textured) {
+                        tinyobj::real_t tx = attrib.texcoords[2*size_t(idx.texcoord_index)+0];
+                        tinyobj::real_t ty = attrib.texcoords[2*size_t(idx.texcoord_index)+1];
+                        texCoords.push_back(tx);
+                        texCoords.push_back(ty);
                     }
 
                     // Optional: vertex colors
@@ -69,17 +82,26 @@ class objLoader {
                     green = attrib.colors[3*size_t(idx.vertex_index)+1];
                     blue  = attrib.colors[3*size_t(idx.vertex_index)+2];
 
-                    std::vector<float> temp2 = {vx, vy, vz, red, green, blue};
-                    vertices.insert(vertices.end(), temp2.begin(), temp2.end());
+                    std::vector<float> temp = {vx, vy, vz, red, green, blue};
+                    vertices.insert(vertices.end(), temp.begin(), temp.end());
                 }
-                
-                glm::vec3 edge1 = glm::vec3(vertices[6], vertices[7], vertices[8]) - glm::vec3(vertices[0], vertices[1], vertices[2]);
-                glm::vec3 edge2 = glm::vec3(vertices[12], vertices[13], vertices[14]) - glm::vec3(vertices[0], vertices[1], vertices[2]);
-                normal = glm::normalize(glm::cross(edge2, edge1));
+                if (normals.empty()) {
+                    glm::vec3 edge1 = glm::vec3(vertices[6], vertices[7], vertices[8]) - glm::vec3(vertices[0], vertices[1], vertices[2]);
+                    glm::vec3 edge2 = glm::vec3(vertices[12], vertices[13], vertices[14]) - glm::vec3(vertices[0], vertices[1], vertices[2]);
+                    normal = glm::normalize(glm::cross(edge2, edge1));
+                    for (size_t v = 0; v < fv; v++) {
+                        normals.push_back(normal.x);
+                        normals.push_back(normal.y);
+                        normals.push_back(normal.z);
+                    }
+                }
                 for (size_t v = 0; v < fv; v++) {
-                    std::vector<float> withNormals = {vertices[v*6], vertices[(v*6) + 1], vertices[(v*6) + 2], normal.x, normal.y, normal.z, vertices[(v*6) + 3], vertices[(v*6) + 4], vertices[(v*6) + 5]};
+                    std::vector<float> withNormals = {vertices[v*6], vertices[(v*6) + 1], vertices[(v*6) + 2], -1*normals[v*3], -1*normals[(v*3) + 1], -1*normals[(v*3) + 2], vertices[(v*6) + 3], vertices[(v*6) + 4], vertices[(v*6) + 5]};
+                    if(textured && !texCoords.empty()) withNormals.insert(withNormals.end(), texCoords.begin(), texCoords.end());
                     VBO_data.insert(VBO_data.end(), withNormals.begin(), withNormals.end());
+                    
                 }
+
 
                 index_offset += fv;
 
