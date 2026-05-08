@@ -49,7 +49,7 @@ int main(void)
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
 
     /* Create a windowed mode window and its OpenGL context */
-    int winWidth = 300;
+    int winWidth = 100;
     float aspectRatio = 1.0f; //16.0 / 9.0; // winWidth / (float)winHeight;
     int winHeight = winWidth / aspectRatio;
     
@@ -358,7 +358,7 @@ int main(void)
         glm::mat4 modelRotateY = glm::rotate(glm::mat4(1.0), rotAngleY, glm::vec3(0, 1, 0));
         glm::mat4 modelRotate = modelRotateY * modelRotateX;
         glm::mat4 modelTranslatePostRotate = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, -11));
-        glm::mat4 modelScale = glm::scale(glm::mat4(1.0), {0.25f, 0.25f, 0.25f});
+        glm::mat4 modelScale = glm::scale(glm::mat4(1.0), {0.3f, 0.3f, 0.3f});
         glm::mat4 modelTransform = modelTranslatePostRotate * modelRotate * modelScale * modelTranslatePreRotate;
         
         rotAngleXVelocity -= rotAngleDeceleration;
